@@ -1,7 +1,7 @@
 # Fleming-VL
 
 <p align="center">
-    🌐 <a href="" target="_blank">博客</a> | 📃 <a href="" target="_blank">论文</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">模型</a> |  🤗 <a href="" target="_blank">训练数据</a>  |  🎥 <a href="" target="_blank">演示</a>
+ 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README.md" target="_blank">English</a>
 
 </p>
 
@@ -24,33 +24,33 @@ Fleming-VL 是一个面向医疗场景的多模态推理模型，能够处理和
 
 ## 📊 性能表现
 
-<div align="center">
-  <figure>
-    <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
-    <figcaption><b>图 1.</b> 主要基准测试结果。</figcaption>
-  </figure>
-</div>
+<p align="center">
+  <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
+</p>
+<p align="center">
+  <b>图 1.</b> 主要基准测试结果。
+</p>
 
-<div align="center">
-  <figure>
-    <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
-    <figcaption><b>图 2.</b> 通用医学 VQA。</figcaption>
-  </figure>
-</div>
+<p align="center">
+  <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
+</p>
+<p align="center">
+  <b>图 2.</b> 通用医学 VQA。
+</p>
 
-<div align="center">
-  <figure>
-    <img src="images/report.png" alt="Medical Report Generation" width="60%">
-    <figcaption><b>图 3.</b> 医学报告生成。</figcaption>
-  </figure>
-</div>
+<p align="center">
+  <img src="images/report.png" alt="Medical Report Generation" width="60%">
+</p>
+<p align="center">
+  <b>图 3.</b> 医学报告生成。
+</p>
 
-<div align="center">
-  <figure>
-    <img src="images/video_3d.png" alt="Video and 3D understanding" width="60%">
-    <figcaption><b>图 4.</b> 视频和3D理解。</figcaption>
-  </figure>
-</div>
+<p align="center">
+  <img src="images/video_3d.png" alt="Video and 3D understanding" width="60%">
+</p>
+<p align="center">
+  <b>图 4.</b> 视频和3D理解。
+</p>
 
 ## 🔧 快速开始
 
