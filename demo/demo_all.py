@@ -1,59 +1,3 @@
-# Fleming-VL
-
-<p align="center">
-    🌐 <a href="" target="_blank">Blog</a> | 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Model</a> |  🤗 <a href="" target="_blank">Training_Data</a>  |  🎥 <a href="" target="_blank">Demo</a>
-
-</p>
-
-
-## 📖 Model Overview
-
-Fleming-VL is a multimodal reasoning model for medical scenarios that can process and analyze various types of medical data including 2D images, 3D volumetric data, and video sequences. The model performs step-by-step analysis of complex multimodal medical problems and produces reliable answers. Building upon the GRPO reasoning paradigm, Fleming-VL extends the capabilities to handle diverse medical imaging modalities while maintaining strong reasoning performance.
-
-**Model Features:**
-
-* **Multimodal Processing** Supports various medical data types including 2D images (X-rays, pathology slides), 3D volumes (CT/MRI scans), and videos (ultrasound, endoscopy, surgical recordings);
-* **Medical Reasoning** Performs step-by-step chain-of-thought reasoning to analyze complex medical problems, combining visual information with medical knowledge to provide reliable diagnostic insights.
-## 📦 Releases
-
-- **Fleming-VL-7B** —— Trained on InternVL3-8B  
-  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
-- **Fleming-VL-38B** —— Trained on InternVL3-38B   
-  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
-
-## 📊 Performance
-
-<div align="center">
-  <figure>
-    <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
-    <figcaption><b>Figure 1.</b> Main Benchmark Results.</figcaption>
-  </figure>
-</div>
-
-<div align="center">
-  <figure>
-    <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
-    <figcaption><b>Figure 2.</b> General Medical VQA.</figcaption>
-  </figure>
-</div>
-
-<div align="center">
-  <figure>
-    <img src="images/report.png" alt="Medical Report Generation" width="60%">
-    <figcaption><b>Figure 3.</b> Medical Report Generation.</figcaption>
-  </figure>
-</div>
-
-<div align="center">
-  <figure>
-    <img src="images/video_3d.png" alt="Video and 3D understanding" width="60%">
-    <figcaption><b>Figure 4.</b> Video and 3D Understanding.</figcaption>
-  </figure>
-</div>
-
-## 🔧 Quick Start
-
-```python
 """
 Fleming-VL-8B Multi-Modal Inference Script
 
@@ -455,7 +399,7 @@ def main():
     print("EXAMPLE 1: Single Image Inference")
     print("="*80)
     
-    image_path = "demo/resource/test.png"
+    image_path = "./test.png"
     question = (
         "What imaging technique was employed to obtain this picture?\n"
         "A. PET scan. B. CT scan. C. Blood test. D. Fundus imaging."
@@ -478,7 +422,7 @@ def main():
     print("EXAMPLE 2: Video Inference")
     print("="*80)
     
-    video_path = "demo/resource/test.mp4"
+    video_path = "./test.mp4"
     video_duration = 6  # seconds
     question = "Please describe the video."
     
@@ -499,7 +443,7 @@ def main():
     print("EXAMPLE 3: 3D Medical Image Inference")
     print("="*80)
     
-    npy_path = "demo/resource/test.npy"
+    npy_path = "./test.npy"
     question = "What device is observed on the chest wall?"
     
     # Example cases:
@@ -527,25 +471,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-
-## ⚠️ Safety Statement
-
-This project is for research and non-clinical reference only; it must not be used for actual diagnosis or treatment decisions.  
-The generated reasoning traces are an auditable intermediate process and do not constitute medical advice.  
-In medical scenarios, results must be reviewed and approved by qualified professionals, and all applicable laws, regulations, and privacy compliance requirements in your region must be followed.
-
-## 📚 Citation
-
-```bibtex
-@misc{flemingr1,
-      title={Fleming-R1: Toward Expert-Level Medical Reasoning via Reinforcement Learning}, 
-      author={Chi Liu and Derek Li and Yan Shu and Robin Chen and Derek Duan and Teng Fang and Bryan Dai},
-      year={2025},
-      eprint={2509.15279},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2509.15279}, 
-}
-```

@@ -1,57 +1,58 @@
 # Fleming-VL
 
 <p align="center">
-    🌐 <a href="" target="_blank">Blog</a> | 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Model</a> |  🤗 <a href="" target="_blank">Training_Data</a>  |  🎥 <a href="" target="_blank">Demo</a>
+    🌐 <a href="" target="_blank">博客</a> | 📃 <a href="" target="_blank">论文</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">模型</a> |  🤗 <a href="" target="_blank">训练数据</a>  |  🎥 <a href="" target="_blank">演示</a>
 
 </p>
 
 
-## 📖 Model Overview
+## 📖 模型概述
 
-Fleming-VL is a multimodal reasoning model for medical scenarios that can process and analyze various types of medical data including 2D images, 3D volumetric data, and video sequences. The model performs step-by-step analysis of complex multimodal medical problems and produces reliable answers. Building upon the GRPO reasoning paradigm, Fleming-VL extends the capabilities to handle diverse medical imaging modalities while maintaining strong reasoning performance.
+Fleming-VL 是一个面向医疗场景的多模态推理模型，能够处理和分析各种类型的医疗数据，包括2D图像、3D体积数据和视频序列。该模型对复杂的多模态医疗问题进行逐步分析，并产生可靠的答案。基于 GRPO 推理范式，Fleming-VL 扩展了处理多样化医学影像模态的能力，同时保持强大的推理性能。
 
-**Model Features:**
+**模型特点：**
 
-* **Multimodal Processing** Supports various medical data types including 2D images (X-rays, pathology slides), 3D volumes (CT/MRI scans), and videos (ultrasound, endoscopy, surgical recordings);
-* **Medical Reasoning** Performs step-by-step chain-of-thought reasoning to analyze complex medical problems, combining visual information with medical knowledge to provide reliable diagnostic insights.
-## 📦 Releases
+* **多模态处理** 支持各种医疗数据类型，包括2D图像（X光片、病理切片）、3D体积（CT/MRI扫描）和视频（超声、内窥镜、手术记录）；
+* **医学推理** 执行逐步的思维链推理来分析复杂的医学问题，结合视觉信息和医学知识提供可靠的诊断见解。
 
-- **Fleming-VL-7B** —— Trained on InternVL3-8B  
+## 📦 发布版本
+
+- **Fleming-VL-7B** —— 基于 InternVL3-8B 训练  
   🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
-- **Fleming-VL-38B** —— Trained on InternVL3-38B   
+- **Fleming-VL-38B** —— 基于 InternVL3-38B 训练   
   🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
 
-## 📊 Performance
+## 📊 性能表现
 
 <div align="center">
   <figure>
     <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
-    <figcaption><b>Figure 1.</b> Main Benchmark Results.</figcaption>
+    <figcaption><b>图 1.</b> 主要基准测试结果。</figcaption>
   </figure>
 </div>
 
 <div align="center">
   <figure>
     <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
-    <figcaption><b>Figure 2.</b> General Medical VQA.</figcaption>
+    <figcaption><b>图 2.</b> 通用医学 VQA。</figcaption>
   </figure>
 </div>
 
 <div align="center">
   <figure>
     <img src="images/report.png" alt="Medical Report Generation" width="60%">
-    <figcaption><b>Figure 3.</b> Medical Report Generation.</figcaption>
+    <figcaption><b>图 3.</b> 医学报告生成。</figcaption>
   </figure>
 </div>
 
 <div align="center">
   <figure>
     <img src="images/video_3d.png" alt="Video and 3D understanding" width="60%">
-    <figcaption><b>Figure 4.</b> Video and 3D Understanding.</figcaption>
+    <figcaption><b>图 4.</b> 视频和3D理解。</figcaption>
   </figure>
 </div>
 
-## 🔧 Quick Start
+## 🔧 快速开始
 
 ```python
 """
@@ -235,41 +236,47 @@ def get_frame_indices(bound, fps, max_frame, first_idx=0, num_segments=32):
 
 def load_video(video_path, model_path, bound=None, num_segments=32):
     """
-    Load and preprocess video frames.
+    Load frames from a video file.
     
     Args:
         video_path: Path to the video file
         model_path: Path to the model (for image processor)
-        bound: Time boundary tuple (start, end) in seconds
-        num_segments: Number of frames to extract
+        bound: Optional time bounds (start, end) in seconds
+        num_segments: Number of frames to extract (default: 32)
     
     Returns:
-        tuple: (pixel_values tensor, list of num_patches per frame)
+        tuple: (pixel_values tensor, num_patches_list) or None if error
     """
-    vr = VideoReader(video_path, ctx=cpu(0), num_threads=1)
-    max_frame = len(vr) - 1
-    fps = float(vr.get_avg_fps())
+    try:
+        video_reader = VideoReader(video_path, num_threads=1, ctx=cpu(0))
+        max_frame = len(video_reader) - 1
+        fps = float(video_reader.get_avg_fps())
+        
+        # Get frame indices to sample
+        frame_indices = get_frame_indices(bound, fps, max_frame, first_idx=0, num_segments=num_segments)
+        
+        image_processor = CLIPImageProcessor.from_pretrained(model_path)
+        pixel_values_list = []
+        num_patches_list = []
+        
+        # Process each frame
+        for frame_index in frame_indices:
+            img = Image.fromarray(video_reader[frame_index].asnumpy()).convert('RGB')
+            pixel_values = image_processor(images=img, return_tensors='pt').pixel_values
+            num_patches_list.append(pixel_values.shape[0])
+            pixel_values_list.append(pixel_values)
+        
+        pixel_values = torch.cat(pixel_values_list)
+        return pixel_values, num_patches_list
     
-    pixel_values_list = []
-    num_patches_list = []
-    image_processor = CLIPImageProcessor.from_pretrained(model_path)
-    
-    frame_indices = get_frame_indices(bound, fps, max_frame, first_idx=0, num_segments=num_segments)
-    
-    for frame_index in frame_indices:
-        # Extract and preprocess frame
-        img = Image.fromarray(vr[frame_index].asnumpy()).convert('RGB').resize((448, 448))
-        pixel_values = image_processor(images=img, return_tensors='pt').pixel_values
-        num_patches_list.append(pixel_values.shape[0])
-        pixel_values_list.append(pixel_values)
-    
-    pixel_values = torch.cat(pixel_values_list)
-    return pixel_values, num_patches_list
+    except Exception as e:
+        print(f"Error processing video: {str(e)}")
+        return None
 
 
 def inference_video(model, tokenizer, video_path, video_duration, question, prompt=REASONING_PROMPT):
     """
-    Perform inference on a video by sampling frames.
+    Perform inference on a video.
     
     Args:
         model: Loaded vision-language model
@@ -280,18 +287,22 @@ def inference_video(model, tokenizer, video_path, video_duration, question, prom
         prompt: System prompt template
     
     Returns:
-        str: Model response
+        str: Model response or None if error
     """
-    # Sample frames from video (1 frame per second)
-    num_segments = int(video_duration)
-    pixel_values, num_patches_list = load_video(video_path, MODEL_PATH, num_segments=num_segments)
+    # Load video frames
+    result = load_video(video_path, MODEL_PATH, bound=(0, video_duration))
+    
+    if result is None:
+        return None
+    
+    pixel_values, num_patches_list = result
     pixel_values = pixel_values.to(torch.bfloat16).cuda()
     
     # Create image token prefix for all frames
-    video_prefix = ''.join([f'<image>\n' for _ in range(len(num_patches_list))])
+    image_prefix = ''.join([f'<image>\n' for _ in range(len(num_patches_list))])
     
     # Prepare question with prompt and image tokens
-    full_question = f"{prompt}\n{video_prefix}{question}"
+    full_question = f"{prompt}\n{image_prefix}{question}"
     
     # Generate response
     generation_config = dict(max_new_tokens=1024, do_sample=False)
@@ -309,7 +320,7 @@ def inference_video(model, tokenizer, video_path, video_duration, question, prom
 
 
 # ============================================================================
-# 3D Medical Image (NPY) Inference
+# 3D Medical Image Inference
 # ============================================================================
 
 def normalize_image(image):
@@ -530,13 +541,13 @@ if __name__ == "__main__":
 ```
 
 
-## ⚠️ Safety Statement
+## ⚠️ 安全声明
 
-This project is for research and non-clinical reference only; it must not be used for actual diagnosis or treatment decisions.  
-The generated reasoning traces are an auditable intermediate process and do not constitute medical advice.  
-In medical scenarios, results must be reviewed and approved by qualified professionals, and all applicable laws, regulations, and privacy compliance requirements in your region must be followed.
+本项目仅供研究和非临床参考使用；不得用于实际诊断或治疗决策。  
+生成的推理轨迹是可审计的中间过程，不构成医疗建议。  
+在医疗场景中，结果必须由合格的专业人员审查和批准，并且必须遵守您所在地区的所有适用法律、法规和隐私合规要求。
 
-## 📚 Citation
+## 📚 引用
 
 ```bibtex
 @misc{flemingr1,
