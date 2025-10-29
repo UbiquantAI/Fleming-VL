@@ -19,7 +19,7 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 - **Fleming-VL-7B** —— Trained on InternVL3-8B  
   🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
 - **Fleming-VL-38B** —— Trained on InternVL3-38B   
-  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
+  🤗 [`UbiquantAI/Fleming-VL-38B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
 
 ## 📊 Performance
 
