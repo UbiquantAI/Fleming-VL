@@ -20,7 +20,7 @@ Fleming-VL 是一个面向医疗场景的多模态推理模型，能够处理和
 - **Fleming-VL-7B** —— 基于 InternVL3-8B 训练  
   🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
 - **Fleming-VL-38B** —— 基于 InternVL3-38B 训练   
-  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
+  🤗 [`UbiquantAI/Fleming-VL-38B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
 
 ## 📊 性能表现
 
