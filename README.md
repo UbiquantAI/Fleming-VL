@@ -1,7 +1,7 @@
 # Fleming-VL
 
 <p align="center">
-    🌐 <a href="" target="_blank">Blog</a> | 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Model</a> |  🤗 <a href="" target="_blank">Training_Data</a>  |  🎥 <a href="" target="_blank">Demo</a>
+ 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README_CN.md" target="_blank">中文</a>
 
 </p>
 
@@ -17,31 +17,31 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 ## 📦 Releases
 
 - **Fleming-VL-8B** —— Trained on InternVL3-8B  
-  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
+    🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
 - **Fleming-VL-38B** —— Trained on InternVL3-38B   
-  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
+    🤗 [`UbiquantAI/Fleming-VL-38B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
 
 ## 📊 Performance
 
 <div align="center">
-  <figure>
-    <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
-    <figcaption><b>Figure 1.</b> Main Benchmark Results.</figcaption>
-  </figure>
+    <figure>
+        <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
+        <figcaption><b>Figure 1.</b> Main Benchmark Results.</figcaption>
+    </figure>
 </div>
 
 <div align="center">
-  <figure>
-    <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
-    <figcaption><b>Figure 2.</b> General Medical VQA.</figcaption>
-  </figure>
+    <figure>
+        <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
+        <figcaption><b>Figure 2.</b> General Medical VQA.</figcaption>
+    </figure>
 </div>
 
 <div align="center">
-  <figure>
-    <img src="images/report.png" alt="Medical Report Generation" width="60%">
-    <figcaption><b>Figure 3.</b> Medical Report Generation.</figcaption>
-  </figure>
+    <figure>
+        <img src="images/report.png" alt="Medical Report Generation" width="60%">
+        <figcaption><b>Figure 3.</b> Medical Report Generation.</figcaption>
+    </figure>
 </div>
 
 <div align="center">
