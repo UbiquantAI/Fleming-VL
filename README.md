@@ -1,4 +1,4 @@
-# Fleming-VL
+# Fleming-VL: Towards Universal Medical Visual Understanding with Multimodal LLMs
 
 <p align="center">
  📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README_CN.md" target="_blank">中文</a>
@@ -23,33 +23,33 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 
 ## 📊 Performance
 
-<div align="center">
-    <figure>
-        <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
-        <figcaption><b>Figure 1.</b> Main Benchmark Results.</figcaption>
-    </figure>
-</div>
+<p align="center">
+  <img src="images/main_benchmark.png" alt="Main Benchmark Results" width="60%">
+</p>
+<p align="center">
+  <b>Figure 1.</b> Main Benchmark Results.
+</p>
 
-<div align="center">
-    <figure>
-        <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
-        <figcaption><b>Figure 2.</b> General Medical VQA.</figcaption>
-    </figure>
-</div>
+<p align="center">
+  <img src="images/vqa.png" alt="General Medical Vqa" width="60%">
+</p>
+<p align="center">
+  <b>Figure 2.</b> General Medical VQA.
+</p>
 
-<div align="center">
-    <figure>
-        <img src="images/report.png" alt="Medical Report Generation" width="60%">
-        <figcaption><b>Figure 3.</b> Medical Report Generation.</figcaption>
-    </figure>
-</div>
+<p align="center">
+  <img src="images/report.png" alt="Medical Report Generation" width="60%">
+</p>
+<p align="center">
+  <b>Figure 3.</b> Medical Report Generation.
+</p>
 
-<div align="center">
-  <figure>
-    <img src="images/video_3d.png" alt="Video and 3D understanding" width="60%">
-    <figcaption><b>Figure 4.</b> Video and 3D Understanding.</figcaption>
-  </figure>
-</div>
+<p align="center">
+  <img src="images/video_3d.png" alt="Video and 3D understanding" width="60%">
+</p>
+<p align="center">
+  <b>Figure 4.</b> Video and 3D Understanding.
+</p>
 
 ## 🔧 Quick Start
 
