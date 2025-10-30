@@ -56,7 +56,7 @@ Fleming-VL 是一个面向医疗场景的多模态推理模型，能够处理和
 
 <div align="center">
   <figure>
-    <img src="images/vis.jpg" alt="Visualization" width="60%">
+    <img src="images/vis.jpg" alt="Visualization" width="100%">
     <figcaption><b>跨不同医学多模态任务的推理</b></figcaption>
   </figure>
 </div>
