@@ -76,6 +76,15 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 
 </div>
 
+
+## 🔧 Install
+```python
+conda create -n fleming-vl python=3.10
+conda activate fleming-vl
+pip install -r requirements.txt
+```
+
+
 ## 🔧 Quick Start
 
 ```python
