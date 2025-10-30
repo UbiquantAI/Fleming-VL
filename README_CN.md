@@ -77,6 +77,14 @@ Fleming-VL 是一个面向医疗场景的多模态推理模型，能够处理和
 
 </div>
 
+## 🔧 安装
+```python
+conda create -n fleming-vl python=3.10
+conda activate fleming-vl
+pip install -r requirements.txt
+```
+
+
 ## 🔧 快速开始
 
 ```python
