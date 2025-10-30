@@ -55,7 +55,7 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 
 <div align="center">
   <figure>
-    <img src="images/vis.jpg" alt="Visualization" width="60%">
+    <img src="images/vis.jpg" alt="Visualization" width="100%">
     <figcaption><b>Reasoning across different multimodal medical tasks</b></figcaption>
   </figure>
 </div>
