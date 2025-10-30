@@ -51,20 +51,30 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
   </figure>
 </div>
 
-📊 Medical Multimodal Tasks
+## 📊 Medical Multimodal Tasks
+
 <div align="center">
   <figure>
     <img src="images/vis.jpg" alt="Visualization" width="60%">
     <figcaption><b>Reasoning across different multimodal medical tasks</b></figcaption>
   </figure>
 </div>
-Key Medical Multimodal Tasks:
-1. Disease Diagnosis 
-2. Cross-Modal Analysis 
-3. Medical Report Generation 
-4. Treatment Response Prediction 
-5. Clinical Question Answering
 
+<br>
+
+### 🎯 Key Medical Multimodal Tasks
+
+<div align="center">
+
+| **Task** | **Description** |
+|:---|:---|
+| 🏥 **Disease Diagnosis** | Integration of medical imaging with clinical records for comprehensive disease identification |
+| 🔄 **Cross-Modal Analysis** | Fusion of different imaging modalities for enhanced diagnostic accuracy |
+| 📄 **Medical Report Generation** | Automatic generation of diagnostic reports from medical images |
+| 💊 **Treatment Response Prediction** | Predicting patient response to therapies using multimodal data |
+| 💬 **Clinical Question Answering** | AI-powered Q&A system integrating images with natural language queries |
+
+</div>
 
 ## 🔧 Quick Start
 
