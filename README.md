@@ -1,7 +1,7 @@
 # Fleming-VL: Towards Universal Medical Visual Understanding with Multimodal LLMs
 
 <p align="center">
- 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-38B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README_CN.md" target="_blank">中文</a>
+    🌐 <a href="" target="_blank">Blog</a> | 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Model</a> |  🤗 <a href="" target="_blank">Training_Data</a>  |  🎥 <a href="" target="_blank">Demo</a> | 📃 <a href="README_CN.md" target="_blank">中文</a> |
 
 </p>
 
@@ -17,9 +17,9 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 ## 📦 Releases
 
 - **Fleming-VL-8B** —— Trained on InternVL3-8B  
-    🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
+  🤗 [`UbiquantAI/Fleming-VL-8B`](https://huggingface.co/UbiquantAI/Fleming-VL-8B)
 - **Fleming-VL-38B** —— Trained on InternVL3-38B   
-    🤗 [`UbiquantAI/Fleming-VL-38B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
+  🤗 [`UbiquantAI/Fleming-VL-38B`](https://huggingface.co/UbiquantAI/Fleming-VL-38B)
 
 ## 📊 Performance
 
@@ -50,6 +50,40 @@ Fleming-VL is a multimodal reasoning model for medical scenarios that can proces
 <p align="center">
   <b>Figure 4.</b> Video and 3D Understanding.
 </p>
+
+## 📊 Medical Multimodal Tasks
+
+<div align="center">
+  <figure>
+    <img src="images/vis.jpg" alt="Visualization" width="100%">
+    <figcaption><b>Reasoning across different multimodal medical tasks</b></figcaption>
+  </figure>
+</div>
+
+<br>
+
+### 🎯 Key Medical Multimodal Tasks
+
+<div align="center">
+
+| **Task** | **Description** |
+|:---|:---|
+| 🏥 **Disease Diagnosis** | Integration of medical imaging with clinical records for comprehensive disease identification |
+| 🔄 **Cross-Modal Analysis** | Fusion of different imaging modalities for enhanced diagnostic accuracy |
+| 📄 **Medical Report Generation** | Automatic generation of diagnostic reports from medical images |
+| 💊 **Treatment Response Prediction** | Predicting patient response to therapies using multimodal data |
+| 💬 **Clinical Question Answering** | AI-powered Q&A system integrating images with natural language queries |
+
+</div>
+
+
+## 🔧 Install
+```python
+conda create -n fleming-vl python=3.10
+conda activate fleming-vl
+pip install -r requirements.txt
+```
+
 
 ## 🔧 Quick Start
 

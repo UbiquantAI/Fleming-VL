@@ -52,6 +52,39 @@ Fleming-VL 是一个面向医疗场景的多模态推理模型，能够处理和
   <b>图 4.</b> 视频和3D理解。
 </p>
 
+## 📊 医学多模态任务
+
+<div align="center">
+  <figure>
+    <img src="images/vis.jpg" alt="Visualization" width="100%">
+    <figcaption><b>跨不同医学多模态任务的推理</b></figcaption>
+  </figure>
+</div>
+
+<br>
+
+### 🎯 主要医学多模态任务
+
+<div align="center">
+
+| **任务** | **描述** |
+|:---|:---|
+| 🏥 **疾病诊断** | 整合医学影像与临床记录，实现全面的疾病识别 |
+| 🔄 **跨模态分析** | 融合不同影像模态，提升诊断准确性 |
+| 📄 **医学报告生成** | 从医学影像自动生成诊断报告 |
+| 💊 **治疗反应预测** | 利用多模态数据预测患者对治疗的反应 |
+| 💬 **临床问答** | 整合影像与自然语言查询的AI问答系统 |
+
+</div>
+
+## 🔧 安装
+```python
+conda create -n fleming-vl python=3.10
+conda activate fleming-vl
+pip install -r requirements.txt
+```
+
+
 ## 🔧 快速开始
 
 ```python
