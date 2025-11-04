@@ -1,7 +1,7 @@
 # Fleming-VL: Towards Universal Medical Visual Understanding with Multimodal LLMs
 
 <p align="center">
-    🌐 <a href="" target="_blank">Blog</a> | 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Model</a> |  🤗 <a href="" target="_blank">Training_Data</a>  |  🎥 <a href="" target="_blank">Demo</a> | 📃 <a href="README_CN.md" target="_blank">中文</a> |
+ 📃 <a href="https://arxiv.org/abs/2511.00916" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-38B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README_CN.md" target="_blank">中文</a>
 
 </p>
 
@@ -573,13 +573,13 @@ In medical scenarios, results must be reviewed and approved by qualified profess
 ## 📚 Citation
 
 ```bibtex
-@misc{flemingr1,
-      title={Fleming-R1: Toward Expert-Level Medical Reasoning via Reinforcement Learning}, 
-      author={Chi Liu and Derek Li and Yan Shu and Robin Chen and Derek Duan and Teng Fang and Bryan Dai},
+@misc{shu2025flemingvluniversalmedicalvisual,
+      title={Fleming-VL: Towards Universal Medical Visual Reasoning with Multimodal LLMs}, 
+      author={Yan Shu and Chi Liu and Robin Chen and Derek Li and Bryan Dai},
       year={2025},
-      eprint={2509.15279},
+      eprint={2511.00916},
       archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2509.15279}, 
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2511.00916}, 
 }
 ```

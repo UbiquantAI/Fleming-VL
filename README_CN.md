@@ -1,7 +1,7 @@
 # Fleming-VL
 
 <p align="center">
- 📃 <a href="" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-38B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README.md" target="_blank">English</a>
+ 📃 <a href="https://arxiv.org/abs/2511.00916" target="_blank">Paper</a> | 🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-8B" target="_blank">Fleming-VL-8B</a> |  🤗 <a href="https://huggingface.co/UbiquantAI/Fleming-VL-38B" target="_blank">Fleming-VL-38B</a> |  🌎 <a href="https://github.com/UbiquantAI/Fleming-VL/blob/main/README.md" target="_blank">English</a>
 
 </p>
 
@@ -583,13 +583,13 @@ if __name__ == "__main__":
 ## 📚 引用
 
 ```bibtex
-@misc{flemingr1,
-      title={Fleming-R1: Toward Expert-Level Medical Reasoning via Reinforcement Learning}, 
-      author={Chi Liu and Derek Li and Yan Shu and Robin Chen and Derek Duan and Teng Fang and Bryan Dai},
+@misc{shu2025flemingvluniversalmedicalvisual,
+      title={Fleming-VL: Towards Universal Medical Visual Reasoning with Multimodal LLMs}, 
+      author={Yan Shu and Chi Liu and Robin Chen and Derek Li and Bryan Dai},
       year={2025},
-      eprint={2509.15279},
+      eprint={2511.00916},
       archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2509.15279}, 
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2511.00916}, 
 }
 ```
