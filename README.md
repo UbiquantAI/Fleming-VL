@@ -286,10 +286,10 @@ def inference_single_image(model, tokenizer, image_path, question,
     
     # Prepare question with prompt and image token
     full_question = f"{prompt}\n<image>\n{question}"
-    print("###",full_question)
+    # print("###",full_question)
     
     # Generate response
-    generation_config = dict(max_new_tokens=2048, do_sample=True)
+    generation_config = dict(max_new_tokens=2048, do_sample=False)
     response = model.chat(tokenizer, pixel_values, full_question, generation_config)
     
     return response
