@@ -10,11 +10,12 @@ Model: UbiquantAI/Fleming-VL-8B
 Based on: InternVL_chat-1.2 template
 """
 
-from transformers import AutoTokenizer, AutoModel, CLIPImageProcessor
+from transformers import AutoTokenizer, AutoModel
+from torchvision.transforms.functional import InterpolationMode
 from decord import VideoReader, cpu
 from PIL import Image
+import torchvision.transforms as T
 import numpy as np
-import shutil
 import torch
 import os
 
@@ -23,8 +24,7 @@ import os
 # Configuration
 # ============================================================================
 
-MODEL_PATH = "UbiquantAI/Fleming-VL-8B"
-REQUIRED_FILES_DIR = './required_files'
+MODEL_PATH = "/volume/med-train/users/shuyan/flemingvl8b"
 
 # Prompt template for reasoning-based responses
 REASONING_PROMPT = (
@@ -37,46 +37,105 @@ REASONING_PROMPT = (
     "<answer> answer here </answer>"
 )
 
+IMAGENET_MEAN = (0.485, 0.456, 0.406)
+IMAGENET_STD = (0.229, 0.224, 0.225)
+
+
+# ============================================================================
+# Image Preprocessing Functions
+# ============================================================================
+
+def build_transform(input_size):
+    """Build image transformation pipeline."""
+    MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
+    transform = T.Compose([
+        T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
+        T.Resize((input_size, input_size), interpolation=InterpolationMode.BICUBIC),
+        T.ToTensor(),
+        T.Normalize(mean=MEAN, std=STD)
+    ])
+    return transform
+
+
+def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
+    """Find the closest aspect ratio from target ratios."""
+    best_ratio_diff = float('inf')
+    best_ratio = (1, 1)
+    area = width * height
+    for ratio in target_ratios:
+        target_aspect_ratio = ratio[0] / ratio[1]
+        ratio_diff = abs(aspect_ratio - target_aspect_ratio)
+        if ratio_diff < best_ratio_diff:
+            best_ratio_diff = ratio_diff
+            best_ratio = ratio
+        elif ratio_diff == best_ratio_diff:
+            if area > 0.5 * image_size * image_size * ratio[0] * ratio[1]:
+                best_ratio = ratio
+    return best_ratio
+
+
+def dynamic_preprocess(image, min_num=1, max_num=12, image_size=448, use_thumbnail=False):
+    """
+    Dynamically preprocess image by splitting into tiles based on aspect ratio.
+    
+    Args:
+        image: PIL Image
+        min_num: Minimum number of tiles
+        max_num: Maximum number of tiles
+        image_size: Size of each tile
+        use_thumbnail: Whether to add a thumbnail image
+    
+    Returns:
+        List of preprocessed PIL Images
+    """
+    orig_width, orig_height = image.size
+    aspect_ratio = orig_width / orig_height
+
+    # Calculate possible tile configurations
+    target_ratios = set(
+        (i, j) for n in range(min_num, max_num + 1) 
+        for i in range(1, n + 1) 
+        for j in range(1, n + 1) 
+        if i * j <= max_num and i * j >= min_num
+    )
+    target_ratios = sorted(target_ratios, key=lambda x: x[0] * x[1])
+
+    # Find the closest aspect ratio to the target
+    target_aspect_ratio = find_closest_aspect_ratio(
+        aspect_ratio, target_ratios, orig_width, orig_height, image_size
+    )
+
+    # Calculate target dimensions
+    target_width = image_size * target_aspect_ratio[0]
+    target_height = image_size * target_aspect_ratio[1]
+    blocks = target_aspect_ratio[0] * target_aspect_ratio[1]
+
+    # Resize and split the image
+    resized_img = image.resize((target_width, target_height))
+    processed_images = []
+    for i in range(blocks):
+        box = (
+            (i % (target_width // image_size)) * image_size,
+            (i // (target_width // image_size)) * image_size,
+            ((i % (target_width // image_size)) + 1) * image_size,
+            ((i // (target_width // image_size)) + 1) * image_size
+        )
+        split_img = resized_img.crop(box)
+        processed_images.append(split_img)
+    
+    assert len(processed_images) == blocks
+    
+    # Add thumbnail if requested
+    if use_thumbnail and len(processed_images) != 1:
+        thumbnail_img = image.resize((image_size, image_size))
+        processed_images.append(thumbnail_img)
+    
+    return processed_images
+
 
 # ============================================================================
 # Utility Functions
 # ============================================================================
-
-def copy_necessary_files(target_path, source_path):
-    """
-    Copy required model configuration files to the model directory.
-    
-    Args:
-        target_path: Destination directory (model path)
-        source_path: Source directory containing required files
-    """
-    required_files = [
-        "modeling_internvl_chat.py",
-        "conversation.py",
-        "modeling_intern_vit.py",
-        "preprocessor_config.json",
-        "configuration_internvl_chat.py",
-        "configuration_intern_vit.py",
-    ]
-    
-    for filename in required_files:
-        target_file = os.path.join(target_path, filename)
-        source_file = os.path.join(source_path, filename)
-        
-        if not os.path.exists(target_file):
-            print(f"File {filename} not found in target path, copying from source...")
-            
-            if os.path.exists(source_file):
-                try:
-                    shutil.copy2(source_file, target_file)
-                    print(f"Successfully copied {filename}")
-                except Exception as e:
-                    print(f"Error copying {filename}: {str(e)}")
-            else:
-                print(f"Warning: Source file {filename} does not exist, cannot copy")
-        else:
-            print(f"File {filename} already exists")
-
 
 def load_model(model_path, use_flash_attn=True):
     """
@@ -110,7 +169,8 @@ def load_model(model_path, use_flash_attn=True):
 # Image Inference
 # ============================================================================
 
-def inference_single_image(model, tokenizer, image_path, question, prompt=REASONING_PROMPT):
+def inference_single_image(model, tokenizer, image_path, question, 
+                          prompt=REASONING_PROMPT, input_size=448, max_num=12):
     """
     Perform inference on a single image.
     
@@ -120,23 +180,25 @@ def inference_single_image(model, tokenizer, image_path, question, prompt=REASON
         image_path: Path to the input image
         question: Question to ask about the image
         prompt: System prompt template
+        input_size: Input image size (default: 448)
+        max_num: Maximum number of tiles (default: 12)
     
     Returns:
         str: Model response
     """
-    # Load and preprocess image
-    image_processor = CLIPImageProcessor.from_pretrained(MODEL_PATH)
-    image = Image.open(image_path).resize((448, 448))
-    pixel_values = image_processor(
-        images=image,
-        return_tensors='pt'
-    ).pixel_values.to(torch.bfloat16).cuda()
+    # Load and preprocess image using InternVL's dynamic preprocessing
+    image = Image.open(image_path).convert('RGB')
+    transform = build_transform(input_size=input_size)
+    images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=True, max_num=max_num)
+    pixel_values = [transform(img) for img in images]
+    pixel_values = torch.stack(pixel_values).to(torch.bfloat16).cuda()
     
     # Prepare question with prompt and image token
     full_question = f"{prompt}\n<image>\n{question}"
+    # print("###",full_question)
     
     # Generate response
-    generation_config = dict(max_new_tokens=1024, do_sample=False)
+    generation_config = dict(max_new_tokens=2048, do_sample=False)
     response = model.chat(tokenizer, pixel_values, full_question, generation_config)
     
     return response
@@ -177,14 +239,15 @@ def get_frame_indices(bound, fps, max_frame, first_idx=0, num_segments=32):
     return frame_indices
 
 
-def load_video(video_path, model_path, bound=None, num_segments=32):
+def load_video(video_path, bound=None, input_size=448, max_num=1, num_segments=32):
     """
     Load and preprocess video frames.
     
     Args:
         video_path: Path to the video file
-        model_path: Path to the model (for image processor)
         bound: Time boundary tuple (start, end) in seconds
+        input_size: Input image size (default: 448)
+        max_num: Maximum number of tiles per frame (default: 1)
         num_segments: Number of frames to extract
     
     Returns:
@@ -196,14 +259,16 @@ def load_video(video_path, model_path, bound=None, num_segments=32):
     
     pixel_values_list = []
     num_patches_list = []
-    image_processor = CLIPImageProcessor.from_pretrained(model_path)
+    transform = build_transform(input_size=input_size)
     
     frame_indices = get_frame_indices(bound, fps, max_frame, first_idx=0, num_segments=num_segments)
     
     for frame_index in frame_indices:
         # Extract and preprocess frame
-        img = Image.fromarray(vr[frame_index].asnumpy()).convert('RGB').resize((448, 448))
-        pixel_values = image_processor(images=img, return_tensors='pt').pixel_values
+        img = Image.fromarray(vr[frame_index].asnumpy()).convert('RGB')
+        img = dynamic_preprocess(img, image_size=input_size, use_thumbnail=True, max_num=max_num)
+        pixel_values = [transform(tile) for tile in img]
+        pixel_values = torch.stack(pixel_values)
         num_patches_list.append(pixel_values.shape[0])
         pixel_values_list.append(pixel_values)
     
@@ -211,7 +276,8 @@ def load_video(video_path, model_path, bound=None, num_segments=32):
     return pixel_values, num_patches_list
 
 
-def inference_video(model, tokenizer, video_path, video_duration, question, prompt=REASONING_PROMPT):
+def inference_video(model, tokenizer, video_path, video_duration, question, 
+                   prompt=REASONING_PROMPT, input_size=448, max_num=1):
     """
     Perform inference on a video by sampling frames.
     
@@ -222,13 +288,18 @@ def inference_video(model, tokenizer, video_path, video_duration, question, prom
         video_duration: Duration of video in seconds
         question: Question to ask about the video
         prompt: System prompt template
+        input_size: Input image size (default: 448)
+        max_num: Maximum number of tiles per frame (default: 1)
     
     Returns:
         str: Model response
     """
     # Sample frames from video (1 frame per second)
     num_segments = int(video_duration)
-    pixel_values, num_patches_list = load_video(video_path, MODEL_PATH, num_segments=num_segments)
+    pixel_values, num_patches_list = load_video(
+        video_path, bound=None, input_size=input_size, 
+        max_num=max_num, num_segments=num_segments
+    )
     pixel_values = pixel_values.to(torch.bfloat16).cuda()
     
     # Create image token prefix for all frames
@@ -275,7 +346,7 @@ def normalize_image(image):
     return ((image - img_min) / (img_max - img_min) * 255).astype(np.uint8)
 
 
-def convert_npy_to_images(npy_path, model_path, num_slices=11):
+def convert_npy_to_images(npy_path, input_size=448, max_num=1, num_slices=11):
     """
     Convert 3D medical image (.npy) to multiple 2D RGB images.
     
@@ -284,7 +355,8 @@ def convert_npy_to_images(npy_path, model_path, num_slices=11):
     
     Args:
         npy_path: Path to the .npy file
-        model_path: Path to the model (for image processor)
+        input_size: Input image size (default: 448)
+        max_num: Maximum number of tiles per slice (default: 1)
         num_slices: Number of slices to extract (default: 11)
     
     Returns:
@@ -306,7 +378,7 @@ def convert_npy_to_images(npy_path, model_path, num_slices=11):
         # Select evenly distributed slices from 32 slices
         indices = np.linspace(0, 31, num_slices, dtype=int)
         
-        image_processor = CLIPImageProcessor.from_pretrained(model_path)
+        transform = build_transform(input_size=input_size)
         pixel_values_list = []
         num_patches_list = []
         
@@ -324,8 +396,10 @@ def convert_npy_to_images(npy_path, model_path, num_slices=11):
             # Convert to PIL Image
             img = Image.fromarray(rgb_img)
             
-            # Preprocess with CLIP processor
-            pixel_values = image_processor(images=img, return_tensors='pt').pixel_values
+            # Preprocess with InternVL's dynamic preprocessing
+            img = dynamic_preprocess(img, image_size=input_size, use_thumbnail=True, max_num=max_num)
+            pixel_values = [transform(tile) for tile in img]
+            pixel_values = torch.stack(pixel_values)
             num_patches_list.append(pixel_values.shape[0])
             pixel_values_list.append(pixel_values)
         
@@ -337,7 +411,8 @@ def convert_npy_to_images(npy_path, model_path, num_slices=11):
         return False
 
 
-def inference_3d_medical_image(model, tokenizer, npy_path, question, prompt=REASONING_PROMPT):
+def inference_3d_medical_image(model, tokenizer, npy_path, question, 
+                              prompt=REASONING_PROMPT, input_size=448, max_num=1):
     """
     Perform inference on 3D medical images stored as .npy files.
     
@@ -347,12 +422,14 @@ def inference_3d_medical_image(model, tokenizer, npy_path, question, prompt=REAS
         npy_path: Path to the .npy file (shape: 32x256x256)
         question: Question to ask about the image
         prompt: System prompt template
+        input_size: Input image size (default: 448)
+        max_num: Maximum number of tiles per slice (default: 1)
     
     Returns:
         str: Model response or None if error
     """
     # Convert 3D volume to multiple 2D slices
-    result = convert_npy_to_images(npy_path, MODEL_PATH)
+    result = convert_npy_to_images(npy_path, input_size=input_size, max_num=max_num)
     
     if result is False:
         return None
@@ -389,8 +466,6 @@ def main():
     """
     Main function demonstrating all three inference modes.
     """
-    # Copy necessary files
-    copy_necessary_files(MODEL_PATH, REQUIRED_FILES_DIR)
     
     # ========================================================================
     # Example 1: Single Image Inference
@@ -399,11 +474,8 @@ def main():
     print("EXAMPLE 1: Single Image Inference")
     print("="*80)
     
-    image_path = "./test.png"
-    question = (
-        "What imaging technique was employed to obtain this picture?\n"
-        "A. PET scan. B. CT scan. C. Blood test. D. Fundus imaging."
-    )
+    image_path = "./resource/1.jpg"
+    question = ' What type of abnormality is present in this image?'
     
     model, tokenizer = load_model(MODEL_PATH, use_flash_attn=True)
     response = inference_single_image(model, tokenizer, image_path, question)
@@ -422,7 +494,7 @@ def main():
     print("EXAMPLE 2: Video Inference")
     print("="*80)
     
-    video_path = "./test.mp4"
+    video_path = "./resource/video.mp4"
     video_duration = 6  # seconds
     question = "Please describe the video."
     
@@ -443,7 +515,7 @@ def main():
     print("EXAMPLE 3: 3D Medical Image Inference")
     print("="*80)
     
-    npy_path = "./test.npy"
+    npy_path = "./resource/test.npy"
     question = "What device is observed on the chest wall?"
     
     # Example cases:
