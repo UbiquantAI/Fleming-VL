@@ -88,18 +88,15 @@ pip install -r requirements.txt
 ## 🔧 Quick Start
 
 ```python
-"""
-"""
-Fleming-VL-8B Multi-Modal Inference Script
+# Fleming-VL-8B Multi-Modal Inference Script
 
-This script demonstrates three inference modes:
-1. Single image inference
-2. Video inference (frame-by-frame)
-3. 3D medical image (CT/MRI) inference from .npy files
+# This script demonstrates three inference modes:
+# 1. Single image inference
+# 2. Video inference (frame-by-frame)
+# 3. 3D medical image (CT/MRI) inference from .npy files
 
-Model: UbiquantAI/Fleming-VL-8B
-Based on: InternVL_chat-1.2 template
-"""
+# Model: UbiquantAI/Fleming-VL-8B
+# Based on: InternVL_chat-1.2 template
 
 from transformers import AutoTokenizer, AutoModel
 from torchvision.transforms.functional import InterpolationMode
@@ -565,7 +562,7 @@ def main():
     print("EXAMPLE 1: Single Image Inference")
     print("="*80)
     
-    image_path = "./resource/1.jpg"
+    image_path = "./demo/resource/test.jpg"
     question = ' What type of abnormality is present in this image?'
     
     model, tokenizer = load_model(MODEL_PATH, use_flash_attn=True)
@@ -585,7 +582,7 @@ def main():
     print("EXAMPLE 2: Video Inference")
     print("="*80)
     
-    video_path = "./resource/video.mp4"
+    video_path = "./demo/resource/video.mp4"
     video_duration = 6  # seconds
     question = "Please describe the video."
     
@@ -606,7 +603,7 @@ def main():
     print("EXAMPLE 3: 3D Medical Image Inference")
     print("="*80)
     
-    npy_path = "./resource/test.npy"
+    npy_path = "./demo/resource/test.npy"
     question = "What device is observed on the chest wall?"
     
     # Example cases:

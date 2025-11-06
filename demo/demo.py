@@ -24,7 +24,7 @@ import os
 # Configuration
 # ============================================================================
 
-MODEL_PATH = "/volume/med-train/users/shuyan/flemingvl8b"
+MODEL_PATH = "UbiquantAI/Fleming-VL-8B"
 
 # Prompt template for reasoning-based responses
 REASONING_PROMPT = (
@@ -474,7 +474,7 @@ def main():
     print("EXAMPLE 1: Single Image Inference")
     print("="*80)
     
-    image_path = "./resource/1.jpg"
+    image_path = "./resource/test.jpg"
     question = ' What type of abnormality is present in this image?'
     
     model, tokenizer = load_model(MODEL_PATH, use_flash_attn=True)
